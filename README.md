@@ -1,6 +1,6 @@
-<<<<<<< HEAD
+
 # Banking_Financial_System
-=======
+
 <h1 align="center">🏦 Banking & Financial Transaction Management System</h1>
 
 <p align="center">
@@ -783,4 +783,4 @@ Special thanks to:
 <p align="center">
   🚀 <b>Turning Data into Insights | SQL | Analytics | Problem Solving</b>
 </p>
->>>>>>> 46d00d9 (Initial commit)
+

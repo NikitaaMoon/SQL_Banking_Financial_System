@@ -4,248 +4,319 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Banking & Financial Transaction Management System</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:       #111111;
-    --bg2:      #181818;
-    --bg3:      #1f1f1f;
-    --bg4:      #242424;
-    --border:   #2a2a2a;
-    --border2:  #333;
-    --text:     #e8e8e8;
-    --muted:    #888;
-    --hint:     #555;
-    --accent:   #7bafd4;
-    --green:    #97c459;
-    --amber:    #ef9f27;
-    --purple:   #afa9ec;
-    --teal:     #5dcaa5;
-    --red:      #e24b4a;
-    --blue:     #378add;
-    --radius:   10px;
-    --radius-sm:6px;
-    --mono:     'JetBrains Mono', monospace;
-    --sans:     'Sora', sans-serif;
+    --bg-main: #c85a00;
+    --bg-dark: #7a2e00;
+    --bg-deep: #3d1500;
+    --gold: #ffcc44;
+    --gold2: #ffaa00;
+    --gold3: #ffe88a;
+    --white: #fff9f0;
+    --glass: rgba(255,220,150,0.08);
+    --glass-hover: rgba(255,220,150,0.13);
+    --glass-border: rgba(255,200,100,0.2);
+    --glass-border-bright: rgba(255,220,130,0.38);
+    --text: #fff8ee;
+    --muted: rgba(255,230,180,0.65);
+    --hint: rgba(255,200,120,0.4);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Outfit', sans-serif;
   }
 
   html { scroll-behavior: smooth; }
 
   body {
-    background: var(--bg);
+    background: #b34f00;
     color: var(--text);
     font-family: var(--sans);
     font-size: 14px;
     line-height: 1.6;
     min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  /* ── LAYOUT ── */
-  .page { max-width: 960px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+  /* ── FIXED BACKGROUND CANVAS ── */
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── NOISE GRAIN ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* ── PAGE ── */
+  .page {
+    position: relative;
+    z-index: 2;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 6rem;
+  }
+
+  /* ── GLASS UTIL ── */
+  .glass {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+  }
 
   /* ── HERO ── */
   .hero {
-    border: 0.5px solid var(--border2);
-    border-radius: 14px;
-    padding: 2rem 2.25rem 1.75rem;
-    margin-bottom: 1.75rem;
-    background: var(--bg2);
-    animation: fadeUp .5s ease both;
+    border-radius: 22px;
+    padding: 2.5rem 2.5rem 2rem;
+    margin-bottom: 1.5rem;
+    animation: fadeUp .6s ease both;
+    position: relative;
+    overflow: hidden;
   }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,180,50,0.1) 0%, rgba(255,100,0,0.06) 60%, rgba(200,80,0,0.04) 100%);
+    border-radius: inherit;
+  }
+  .hero-inner { position: relative; z-index: 1; }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: .75rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-eyebrow::before { content:''; width: 28px; height: 1px; background: var(--gold); opacity: .5; }
 
   .hero-title {
-    font-size: 26px;
-    font-weight: 600;
-    line-height: 1.3;
-    margin-bottom: .5rem;
-    color: #fff;
-    letter-spacing: -.3px;
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: .6rem;
+    background: linear-gradient(135deg, #fff8ee 20%, var(--gold3) 60%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -.4px;
   }
 
   .hero-sub {
     font-size: 13.5px;
     color: var(--muted);
-    line-height: 1.65;
+    line-height: 1.7;
     margin-bottom: 1.5rem;
-    max-width: 680px;
+    max-width: 660px;
+    font-weight: 300;
   }
 
   /* ── BADGES ── */
-  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
-
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.75rem; }
   .badge {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 600;
-    padding: 4px 11px;
+    padding: 5px 13px;
     border-radius: 999px;
-    letter-spacing: .02em;
+    letter-spacing: .03em;
+    backdrop-filter: blur(10px);
   }
-  .b-blue   { background: #0c2340; color: #85b7eb; border: 0.5px solid #1a3d6e; }
-  .b-green  { background: #0d1f09; color: #97c459; border: 0.5px solid #1d4010; }
-  .b-amber  { background: #261a04; color: #ef9f27; border: 0.5px solid #4a3208; }
-  .b-purple { background: #1a1640; color: #afa9ec; border: 0.5px solid #312b6e; }
-  .b-teal   { background: #051f16; color: #5dcaa5; border: 0.5px solid #0d3d28; }
-  .b-gray   { background: #202020; color: #888780; border: 0.5px solid #333; }
-  .b-red    { background: #2a0c0c; color: #f09595; border: 0.5px solid #5a1a1a; }
+  .b-gold   { background: rgba(255,190,50,0.15); color: #ffcc66; border: 1px solid rgba(255,180,50,0.35); }
+  .b-green  { background: rgba(100,220,130,0.12);  color: #7de89a; border: 1px solid rgba(100,220,130,0.3); }
+  .b-amber  { background: rgba(255,160,40,0.15);  color: #ffb755; border: 1px solid rgba(255,160,40,0.35); }
+  .b-light  { background: rgba(255,240,200,0.1); color: #ffe8b8; border: 1px solid rgba(255,220,160,0.25); }
+  .b-teal   { background: rgba(80,210,180,0.12);  color: #62d6be; border: 1px solid rgba(80,210,180,0.3); }
+  .b-gray   { background: rgba(255,220,160,0.07); color: rgba(255,220,170,0.7); border: 1px solid rgba(255,200,130,0.18); }
+  .b-red    { background: rgba(255,100,80,0.12);  color: #ff9988; border: 1px solid rgba(255,100,80,0.3); }
 
   /* ── META CARDS ── */
-  .meta-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 8px;
-  }
-  .meta-card {
-    background: var(--bg3);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-  }
+  .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+  .meta-card { border-radius: 12px; padding: 11px 14px; }
   .meta-label {
-    font-size: 10px;
+    font-size: 9.5px;
     color: var(--hint);
     text-transform: uppercase;
-    letter-spacing: .07em;
-    margin-bottom: 4px;
+    letter-spacing: .1em;
+    margin-bottom: 5px;
+    font-family: var(--mono);
   }
-  .meta-val { font-size: 14px; font-weight: 500; color: #ddd; }
+  .meta-val { font-size: 13.5px; font-weight: 600; color: #ffe8c0; }
 
   /* ── STATS ── */
   .stats-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
     gap: 8px;
-    margin-bottom: 1.75rem;
-    animation: fadeUp .5s .1s ease both;
+    margin-bottom: 1.5rem;
+    animation: fadeUp .6s .1s ease both;
   }
   .stat {
-    background: var(--bg2);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 10px;
+    border-radius: 14px;
+    padding: 16px 10px;
     text-align: center;
+    transition: transform .2s, border-color .2s;
+    position: relative;
+    overflow: hidden;
   }
+  .stat::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,180,50,0.07), transparent);
+    pointer-events: none;
+  }
+  .stat:hover { transform: translateY(-2px); border-color: var(--glass-border-bright); }
   .stat-n {
     font-family: var(--mono);
-    font-size: 24px;
-    font-weight: 600;
-    color: #fff;
+    font-size: 26px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff5e0 0%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     display: block;
+    line-height: 1.1;
   }
-  .stat-l { font-size: 11px; color: var(--hint); margin-top: 3px; }
+  .stat-l { font-size: 10.5px; color: var(--muted); margin-top: 5px; font-weight: 400; }
 
   /* ── TOC ── */
   .toc {
-    background: var(--bg2);
-    border: 0.5px solid var(--border2);
-    border-radius: 12px;
-    padding: 1.25rem 1.75rem;
-    margin-bottom: 1.75rem;
-    animation: fadeUp .5s .15s ease both;
+    border-radius: 18px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.5rem;
+    animation: fadeUp .6s .15s ease both;
   }
-  .toc-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px 2.5rem;
-  }
+  .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 3rem; }
   .toc-item {
     font-size: 13px;
-    color: var(--accent);
-    padding: 5px 0;
+    color: rgba(255,210,130,0.75);
+    padding: 6px 0;
     display: flex;
-    gap: 10px;
+    gap: 11px;
     align-items: center;
     cursor: pointer;
     text-decoration: none;
     transition: color .2s;
+    border-bottom: 1px solid rgba(255,200,100,0.08);
   }
-  .toc-item:hover { color: #fff; }
+  .toc-item:hover { color: #fff8ee; }
   .toc-n { font-family: var(--mono); font-size: 10px; color: var(--hint); min-width: 20px; }
 
   /* ── SECTION ── */
-  .sec { margin-bottom: 2rem; animation: fadeUp .5s .2s ease both; }
-
+  .sec { margin-bottom: 2rem; animation: fadeUp .5s ease both; }
   .sec-head {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--hint);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
     text-transform: uppercase;
-    letter-spacing: .12em;
+    letter-spacing: .14em;
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 12px;
+    font-family: var(--mono);
   }
-  .sec-head::after { content:''; flex: 1; height: 0.5px; background: var(--border); }
+  .sec-head::before { content: ''; width: 18px; height: 2px; background: linear-gradient(90deg, var(--gold), var(--gold2)); border-radius: 2px; }
+  .sec-head::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,180,50,0.3), transparent); }
 
   /* ── FEATURE CARDS ── */
-  .feat-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
-  }
+  .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
   .feat {
-    background: var(--bg2);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    transition: border-color .2s, transform .2s;
+    border-radius: 14px;
+    padding: 18px 18px;
+    transition: transform .25s, border-color .25s;
+    position: relative;
+    overflow: hidden;
   }
-  .feat:hover { border-color: var(--border2); transform: translateY(-1px); }
-  .feat-ic { font-size: 18px; margin-bottom: 9px; display: block; }
-  .feat-t { font-size: 13px; font-weight: 500; color: #e0e0e0; margin-bottom: 6px; }
-  .feat-d { font-size: 12px; color: var(--muted); line-height: 1.55; }
+  .feat::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,200,80,0.3), transparent);
+  }
+  .feat:hover { transform: translateY(-3px); border-color: var(--glass-border-bright); }
+  .feat-ic { font-size: 20px; margin-bottom: 10px; display: block; }
+  .feat-t { font-size: 13px; font-weight: 600; color: #ffe8c0; margin-bottom: 7px; }
+  .feat-d { font-size: 12px; color: var(--muted); line-height: 1.6; }
 
-  /* ── OBJECTIVE BLOCK ── */
+  /* ── OBJECTIVE ── */
   .objective {
     font-size: 13.5px;
-    color: #aaa;
-    line-height: 1.75;
-    padding: 14px 18px;
-    background: var(--bg2);
-    border-radius: var(--radius-sm);
-    border-left: 2px solid var(--accent);
+    color: var(--muted);
+    line-height: 1.8;
+    padding: 18px 22px;
+    border-radius: 12px;
+    position: relative;
+    backdrop-filter: blur(18px);
+  }
+  .objective::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 10%; bottom: 10%;
+    width: 3px;
+    background: linear-gradient(180deg, var(--gold), var(--gold2));
+    border-radius: 999px;
   }
 
   /* ── TABLE ── */
-  .table-wrap { border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .table-wrap { border-radius: 14px; overflow: hidden; border: 1px solid var(--glass-border); }
   .t-head-row {
-    background: var(--bg3);
-    padding: 9px 16px;
-    font-size: 11px;
+    padding: 10px 16px;
+    font-size: 10px;
     color: var(--hint);
-    border-bottom: 0.5px solid var(--border);
     display: grid;
-    grid-template-columns: 195px 90px 1fr;
-    gap: 12px;
-    letter-spacing: .05em;
+    grid-template-columns: 185px 95px 1fr;
+    gap: 14px;
+    letter-spacing: .1em;
     text-transform: uppercase;
+    font-family: var(--mono);
+    background: rgba(255,160,50,0.08);
+    border-bottom: 1px solid var(--glass-border);
   }
   .t-row {
     display: grid;
-    grid-template-columns: 195px 90px 1fr;
-    padding: 10px 16px;
+    grid-template-columns: 185px 95px 1fr;
+    padding: 11px 16px;
     font-size: 12.5px;
-    border-bottom: 0.5px solid #1e1e1e;
-    gap: 12px;
+    border-bottom: 1px solid rgba(255,180,80,0.06);
+    gap: 14px;
     align-items: center;
     transition: background .15s;
+    background: var(--glass);
+    backdrop-filter: blur(10px);
   }
   .t-row:last-child { border-bottom: none; }
-  .t-row:hover { background: var(--bg3); }
-  .t-name { font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--accent); }
+  .t-row:hover { background: rgba(255,200,80,0.1); }
+  .t-name { font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--gold3); }
   .t-tag {
     font-size: 10px;
     font-weight: 600;
-    padding: 3px 9px;
+    padding: 3px 10px;
     border-radius: 999px;
     white-space: nowrap;
     display: inline-block;
     font-family: var(--mono);
   }
-  .t-desc { color: var(--muted); line-height: 1.5; }
+  .t-desc { color: var(--muted); line-height: 1.55; }
 
   /* ── TOOLS ── */
   .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 8px; }
@@ -253,163 +324,164 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 9px 13px;
-    background: var(--bg2);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    border-radius: 10px;
     font-size: 12.5px;
-    color: #ccc;
-    transition: border-color .2s;
+    color: rgba(255,235,185,0.8);
+    transition: border-color .2s, transform .2s;
   }
-  .tool:hover { border-color: var(--border2); }
-  .tdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .tool:hover { border-color: var(--glass-border-bright); transform: translateX(2px); }
+  .tdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 8px currentColor; }
 
   /* ── CODE ── */
   .code {
-    background: #151515;
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 1.1rem 1.4rem;
+    background: rgba(30,10,0,0.6);
+    border: 1px solid rgba(255,160,50,0.15);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
     font-family: var(--mono);
-    font-size: 12px;
-    line-height: 1.85;
+    font-size: 11.5px;
+    line-height: 1.9;
     overflow-x: auto;
     margin-bottom: 1rem;
-    color: #c9c9c9;
+    color: #ffe0b0;
+    position: relative;
+    backdrop-filter: blur(10px);
   }
-  .kw  { color: #7bafd4; }
-  .cm  { color: #484848; }
-  .str { color: #97c459; }
-  .fn  { color: #afa9ec; }
-  .num { color: #ef9f27; }
+  .code::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,190,50,0.5), rgba(255,140,0,0.3), transparent);
+  }
+  .kw  { color: #ffd080; }
+  .cm  { color: rgba(200,150,80,0.45); font-style: italic; }
+  .str { color: #a8e890; }
+  .fn  { color: #ffb07a; }
+  .num { color: #ffcc66; }
 
-  /* ── CLEANING RULE CARDS ── */
+  /* ── RULE CARDS ── */
   .rule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; }
-  .rule {
-    padding: 11px 14px;
-    background: var(--bg2);
-    border-radius: var(--radius-sm);
-    border: 0.5px solid var(--border);
-  }
-  .rule-t { font-size: 12px; font-weight: 500; color: #ddd; margin-bottom: 5px; }
+  .rule { padding: 13px 15px; border-radius: 11px; }
+  .rule-t { font-size: 12px; font-weight: 600; color: #ffe0b0; margin-bottom: 6px; }
   .rule-d { font-size: 11.5px; color: var(--muted); line-height: 1.6; }
 
-  /* ── EDA CARDS ── */
+  /* ── EDA ── */
   .eda-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); gap: 8px; }
-  .eda {
-    padding: 12px 15px;
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--bg2);
-  }
-  .eda-t { font-size: 12.5px; font-weight: 500; color: #ddd; margin-bottom: 6px; }
+  .eda { padding: 14px 15px; border-radius: 11px; }
+  .eda-t { font-size: 12.5px; font-weight: 600; color: #ffe0b0; margin-bottom: 6px; }
   .eda-d { font-size: 11.5px; color: var(--muted); line-height: 1.7; }
 
-  /* ── BUSINESS QUESTIONS ── */
+  /* ── Q GRID ── */
   .q-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .q-item {
     font-size: 12.5px;
-    color: #999;
-    padding: 10px 13px;
-    border-radius: var(--radius-sm);
-    border: 0.5px solid var(--border);
-    background: var(--bg2);
-    line-height: 1.55;
+    color: var(--muted);
+    padding: 11px 14px;
+    border-radius: 10px;
     display: flex;
-    gap: 9px;
+    gap: 10px;
     align-items: flex-start;
-    transition: border-color .2s;
+    transition: all .2s;
   }
-  .q-item:hover { border-color: var(--border2); color: #bbb; }
+  .q-item:hover { background: rgba(255,200,80,0.08) !important; color: #fff0d0; border-color: var(--glass-border-bright); }
   .q-n { font-family: var(--mono); font-size: 10px; color: var(--hint); flex-shrink: 0; padding-top: 2px; }
 
   /* ── INSIGHTS ── */
   .ins-list { display: flex; flex-direction: column; gap: 8px; }
   .ins {
     display: flex;
-    gap: 13px;
-    padding: 12px 15px;
-    border-radius: var(--radius-sm);
-    background: var(--bg2);
-    border: 0.5px solid var(--border);
+    gap: 14px;
+    padding: 13px 16px;
+    border-radius: 11px;
     font-size: 13px;
-    line-height: 1.6;
-    color: #b0b0b0;
+    line-height: 1.65;
+    color: var(--muted);
     align-items: flex-start;
-    transition: border-color .2s;
+    transition: all .2s;
   }
-  .ins:hover { border-color: var(--border2); }
-  .ins-dot { min-width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
-  .ins strong { color: #e2e2e2; font-weight: 500; }
+  .ins:hover { background: rgba(255,200,80,0.08) !important; border-color: var(--glass-border-bright); }
+  .ins-dot { min-width: 9px; height: 9px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; box-shadow: 0 0 10px currentColor; }
+  .ins strong { color: #fff0d0; font-weight: 600; }
 
-  /* ── RECOMMENDATIONS ── */
+  /* ── RECO ── */
   .reco-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
   .reco {
-    background: var(--bg2);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    transition: border-color .2s, transform .2s;
+    border-radius: 14px;
+    padding: 18px 18px;
+    transition: transform .25s, border-color .25s;
+    position: relative;
+    overflow: hidden;
   }
-  .reco:hover { border-color: var(--border2); transform: translateY(-1px); }
+  .reco::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,200,80,0.2), transparent);
+  }
+  .reco:hover { transform: translateY(-3px); border-color: var(--glass-border-bright); }
   .reco-tag {
     font-size: 10px;
     font-weight: 600;
-    padding: 3px 10px;
+    padding: 3px 11px;
     border-radius: 999px;
     display: inline-block;
-    margin-bottom: 10px;
+    margin-bottom: 11px;
     font-family: var(--mono);
   }
-  .reco-t { font-size: 13.5px; font-weight: 500; color: #e0e0e0; margin-bottom: 7px; }
+  .reco-t { font-size: 13.5px; font-weight: 600; color: #ffe0b0; margin-bottom: 8px; }
   .reco-d { font-size: 12px; color: var(--muted); line-height: 1.6; }
 
-  /* ── PROJECT STRUCTURE ── */
+  /* ── STRUCTURE ── */
   .structure {
-    background: #131313;
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 1.25rem 1.5rem;
+    background: rgba(20,8,0,0.6);
+    border: 1px solid rgba(255,160,50,0.12);
+    border-radius: 12px;
+    padding: 1.4rem 1.6rem;
     font-family: var(--mono);
     font-size: 12px;
-    line-height: 2;
-    color: #bbb;
+    line-height: 2.1;
+    color: rgba(255,220,160,0.75);
+    backdrop-filter: blur(10px);
   }
-  .s-dir { color: #7bafd4; }
-  .s-file { color: #ccc; }
-  .s-comment { color: var(--hint); }
+  .s-dir { color: var(--gold); font-weight: 600; }
+  .s-file { color: rgba(255,220,160,0.85); }
+  .s-comment { color: rgba(200,140,60,0.35); }
 
-  /* ── HOW TO RUN ── */
-  .step-list { display: flex; flex-direction: column; gap: 12px; }
-  .step { display: flex; gap: 15px; align-items: flex-start; }
+  /* ── STEPS ── */
+  .step-list { display: flex; flex-direction: column; gap: 14px; }
+  .step { display: flex; gap: 16px; align-items: flex-start; }
   .step-n {
-    min-width: 30px;
-    height: 30px;
+    min-width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: #0c2340;
-    color: #85b7eb;
+    background: linear-gradient(135deg, rgba(255,180,50,0.2), rgba(255,120,0,0.2));
+    color: var(--gold);
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--mono);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     flex-shrink: 0;
-    border: 0.5px solid #1a3d6e;
+    border: 1px solid rgba(255,180,50,0.35);
+    box-shadow: 0 0 16px rgba(255,160,40,0.25);
   }
-  .step-body { padding-top: 5px; }
-  .step-title { font-size: 13.5px; font-weight: 500; color: #ddd; margin-bottom: 5px; }
+  .step-body { padding-top: 6px; }
+  .step-title { font-size: 13.5px; font-weight: 500; color: #ffe0b8; margin-bottom: 6px; }
   .step-cmd {
     font-family: var(--mono);
     font-size: 11px;
-    color: #888;
-    background: #131313;
-    padding: 5px 11px;
-    border-radius: 5px;
+    color: rgba(255,200,120,0.6);
+    background: rgba(20,8,0,0.55);
+    padding: 6px 12px;
+    border-radius: 7px;
     display: inline-block;
-    border: 0.5px solid var(--border);
-    word-break: break-all;
+    border: 1px solid rgba(255,160,50,0.1);
     line-height: 1.7;
+    word-break: break-all;
   }
 
   /* ── OUTCOMES ── */
@@ -418,38 +490,34 @@
     display: flex;
     gap: 9px;
     font-size: 12.5px;
-    color: #999;
-    padding: 9px 13px;
-    background: var(--bg2);
-    border-radius: var(--radius-sm);
-    border: 0.5px solid var(--border);
-    line-height: 1.5;
+    color: var(--muted);
+    padding: 10px 13px;
+    border-radius: 10px;
     align-items: flex-start;
   }
-  .out-ck { color: var(--green); flex-shrink: 0; font-size: 13px; }
+  .out-ck { flex-shrink: 0; font-size: 13px; background: linear-gradient(135deg, #7de89a, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
   /* ── FOOTER ── */
   .footer {
-    border-top: 0.5px solid var(--border);
-    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,180,50,0.12);
+    padding-top: 1.75rem;
     margin-top: 2.5rem;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 14px;
     align-items: center;
   }
-  .f-links { display: flex; gap: 20px; flex-wrap: wrap; }
-  .f-link { font-size: 12.5px; color: var(--accent); cursor: pointer; text-decoration: none; transition: color .2s; }
-  .f-link:hover { color: #fff; }
-  .f-meta { font-size: 11px; color: var(--hint); font-family: var(--mono); }
+  .f-links { display: flex; gap: 22px; flex-wrap: wrap; }
+  .f-link { font-size: 12.5px; color: rgba(255,200,100,0.65); cursor: pointer; text-decoration: none; transition: color .2s; }
+  .f-link:hover { color: #fff8ee; }
+  .f-meta { font-size: 10.5px; color: var(--hint); font-family: var(--mono); }
 
   /* ── ANIMATIONS ── */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(14px); }
+    from { opacity: 0; transform: translateY(18px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .sec { animation: fadeUp .45s ease both; }
   .sec:nth-child(3)  { animation-delay: .05s; }
   .sec:nth-child(4)  { animation-delay: .1s; }
   .sec:nth-child(5)  { animation-delay: .15s; }
@@ -462,72 +530,79 @@
   .sec:nth-child(12) { animation-delay: .5s; }
 
   /* ── SCROLLBAR ── */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #444; }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,180,50,0.25); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,180,50,0.45); }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 620px) {
     .toc-grid, .q-grid { grid-template-columns: 1fr; }
     .t-head-row, .t-row { grid-template-columns: 1fr; }
-    .hero-title { font-size: 20px; }
     .page { padding: 1.5rem 1rem 4rem; }
+    .hero { padding: 1.75rem 1.5rem 1.5rem; }
   }
 </style>
 </head>
 <body>
+
+<!-- ── ANIMATED BACKGROUND CANVAS ── -->
+<canvas id="bg-canvas"></canvas>
+
 <div class="page">
 
   <!-- ══ HERO ══ -->
-  <div class="hero">
-    <div class="hero-title">Banking &amp; Financial Transaction Management System</div>
-    <div class="hero-sub">Enterprise-grade SQL Server database for complete banking operations — account management, transaction processing, loan lifecycle, fraud detection, and financial analytics.</div>
-    <div class="badge-row">
-      <span class="badge b-blue">SQL Server 2019+</span>
-      <span class="badge b-purple">T-SQL Advanced</span>
-      <span class="badge b-green">✓ Production Ready</span>
-      <span class="badge b-teal">13 Tables</span>
-      <span class="badge b-amber">7 Stored Procedures</span>
-      <span class="badge b-gray">5 Views · 2 Triggers</span>
-    </div>
-    <div class="meta-grid">
-      <div class="meta-card"><div class="meta-label">Language</div><div class="meta-val">T-SQL</div></div>
-      <div class="meta-card"><div class="meta-label">Database</div><div class="meta-val">SQL Server</div></div>
-      <div class="meta-card"><div class="meta-label">Author</div><div class="meta-val">Nikita Moon</div></div>
-      <div class="meta-card"><div class="meta-label">Version</div><div class="meta-val">1.0.0</div></div>
-      <div class="meta-card"><div class="meta-label">License</div><div class="meta-val">MIT</div></div>
-      <div class="meta-card"><div class="meta-label">Updated</div><div class="meta-val">Apr 2026</div></div>
+  <div class="hero glass">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Enterprise Banking System</div>
+      <div class="hero-title">Banking &amp; Financial Transaction<br>Management System</div>
+      <div class="hero-sub">Enterprise-grade SQL Server database for complete banking operations — account management, transaction processing, loan lifecycle, fraud detection, and financial analytics.</div>
+      <div class="badge-row">
+        <span class="badge b-gold">SQL Server 2019+</span>
+        <span class="badge b-light">T-SQL Advanced</span>
+        <span class="badge b-green">✓ Production Ready</span>
+        <span class="badge b-teal">13 Tables</span>
+        <span class="badge b-amber">7 Stored Procedures</span>
+        <span class="badge b-gray">5 Views · 2 Triggers</span>
+      </div>
+      <div class="meta-grid">
+        <div class="meta-card glass"><div class="meta-label">Language</div><div class="meta-val">T-SQL</div></div>
+        <div class="meta-card glass"><div class="meta-label">Database</div><div class="meta-val">SQL Server</div></div>
+        <div class="meta-card glass"><div class="meta-label">Author</div><div class="meta-val">Nikita Moon</div></div>
+        <div class="meta-card glass"><div class="meta-label">Version</div><div class="meta-val">1.0.0</div></div>
+        <div class="meta-card glass"><div class="meta-label">License</div><div class="meta-val">MIT</div></div>
+        <div class="meta-card glass"><div class="meta-label">Updated</div><div class="meta-val">Apr 2026</div></div>
+      </div>
     </div>
   </div>
 
   <!-- ══ STATS ══ -->
   <div class="stats-row">
-    <div class="stat"><span class="stat-n">1,207+</span><div class="stat-l">Lines of Code</div></div>
-    <div class="stat"><span class="stat-n">13</span><div class="stat-l">Tables</div></div>
-    <div class="stat"><span class="stat-n">7</span><div class="stat-l">Stored Procedures</div></div>
-    <div class="stat"><span class="stat-n">5</span><div class="stat-l">Views</div></div>
-    <div class="stat"><span class="stat-n">2</span><div class="stat-l">Triggers</div></div>
-    <div class="stat"><span class="stat-n">30+</span><div class="stat-l">Query Examples</div></div>
-    <div class="stat"><span class="stat-n">50K+</span><div class="stat-l">Sample Records</div></div>
+    <div class="stat glass"><span class="stat-n">1,207+</span><div class="stat-l">Lines of Code</div></div>
+    <div class="stat glass"><span class="stat-n">13</span><div class="stat-l">Tables</div></div>
+    <div class="stat glass"><span class="stat-n">7</span><div class="stat-l">Stored Procedures</div></div>
+    <div class="stat glass"><span class="stat-n">5</span><div class="stat-l">Views</div></div>
+    <div class="stat glass"><span class="stat-n">2</span><div class="stat-l">Triggers</div></div>
+    <div class="stat glass"><span class="stat-n">30+</span><div class="stat-l">Query Examples</div></div>
+    <div class="stat glass"><span class="stat-n">50K+</span><div class="stat-l">Sample Records</div></div>
   </div>
 
-  <!-- ══ TABLE OF CONTENTS ══ -->
-  <div class="toc">
-    <div class="sec-head" style="margin-bottom:.85rem">Table of Contents</div>
+  <!-- ══ TOC ══ -->
+  <div class="toc glass">
+    <div class="sec-head" style="margin-bottom:.9rem">Table of Contents</div>
     <div class="toc-grid">
-      <a href="#overview"      class="toc-item"><span class="toc-n">01</span> Project Overview</a>
-      <a href="#objective"     class="toc-item"><span class="toc-n">02</span> Objective</a>
-      <a href="#dataset"       class="toc-item"><span class="toc-n">03</span> Dataset Description</a>
-      <a href="#tools"         class="toc-item"><span class="toc-n">04</span> Tools &amp; Technologies</a>
-      <a href="#cleaning"      class="toc-item"><span class="toc-n">05</span> Data Cleaning &amp; Preparation</a>
-      <a href="#eda"           class="toc-item"><span class="toc-n">06</span> Exploratory Data Analysis</a>
-      <a href="#questions"     class="toc-item"><span class="toc-n">07</span> Business Questions</a>
-      <a href="#queries"       class="toc-item"><span class="toc-n">08</span> Analysis &amp; SQL Queries</a>
-      <a href="#insights"      class="toc-item"><span class="toc-n">09</span> Key Insights</a>
-      <a href="#reco"          class="toc-item"><span class="toc-n">10</span> Recommendations</a>
-      <a href="#structure"     class="toc-item"><span class="toc-n">11</span> Project Structure</a>
-      <a href="#howtorun"      class="toc-item"><span class="toc-n">12</span> How to Run</a>
+      <a href="#overview"  class="toc-item"><span class="toc-n">01</span> Project Overview</a>
+      <a href="#objective" class="toc-item"><span class="toc-n">02</span> Objective</a>
+      <a href="#dataset"   class="toc-item"><span class="toc-n">03</span> Dataset Description</a>
+      <a href="#tools"     class="toc-item"><span class="toc-n">04</span> Tools &amp; Technologies</a>
+      <a href="#cleaning"  class="toc-item"><span class="toc-n">05</span> Data Cleaning &amp; Preparation</a>
+      <a href="#eda"       class="toc-item"><span class="toc-n">06</span> Exploratory Data Analysis</a>
+      <a href="#questions" class="toc-item"><span class="toc-n">07</span> Business Questions</a>
+      <a href="#queries"   class="toc-item"><span class="toc-n">08</span> Analysis &amp; SQL Queries</a>
+      <a href="#insights"  class="toc-item"><span class="toc-n">09</span> Key Insights</a>
+      <a href="#reco"      class="toc-item"><span class="toc-n">10</span> Recommendations</a>
+      <a href="#structure" class="toc-item"><span class="toc-n">11</span> Project Structure</a>
+      <a href="#howtorun"  class="toc-item"><span class="toc-n">12</span> How to Run</a>
     </div>
   </div>
 
@@ -535,19 +610,19 @@
   <div class="sec" id="overview">
     <div class="sec-head">01 · Project Overview</div>
     <div class="feat-grid">
-      <div class="feat"><span class="feat-ic">🏦</span><div class="feat-t">Complete Banking Ecosystem</div><div class="feat-d">Accounts, transactions, loans, and credit cards — all in one normalized schema.</div></div>
-      <div class="feat"><span class="feat-ic">🔍</span><div class="feat-t">Fraud Detection</div><div class="feat-d">Risk scoring engine with 4-factor analysis: amount, time, mode, and frequency.</div></div>
-      <div class="feat"><span class="feat-ic">📊</span><div class="feat-t">Advanced Analytics</div><div class="feat-d">Customer segmentation, EMI performance tracking, and portfolio reporting.</div></div>
-      <div class="feat"><span class="feat-ic">⚙️</span><div class="feat-t">Automated Processing</div><div class="feat-d">Stored procedures for account opening, loan disbursement, and EMI tracking.</div></div>
-      <div class="feat"><span class="feat-ic">📋</span><div class="feat-t">Regulatory Compliance</div><div class="feat-d">KYC verification, PAN/Aadhar validation, and complete audit trail.</div></div>
-      <div class="feat"><span class="feat-ic">💳</span><div class="feat-t">Financial Products</div><div class="feat-d">Fixed deposits, recurring deposits, and credit card rewards management.</div></div>
+      <div class="feat glass"><span class="feat-ic">🏦</span><div class="feat-t">Complete Banking Ecosystem</div><div class="feat-d">Accounts, transactions, loans, and credit cards — all in one normalized schema.</div></div>
+      <div class="feat glass"><span class="feat-ic">🔍</span><div class="feat-t">Fraud Detection</div><div class="feat-d">Risk scoring engine with 4-factor analysis: amount, time, mode, and frequency.</div></div>
+      <div class="feat glass"><span class="feat-ic">📊</span><div class="feat-t">Advanced Analytics</div><div class="feat-d">Customer segmentation, EMI performance tracking, and portfolio reporting.</div></div>
+      <div class="feat glass"><span class="feat-ic">⚙️</span><div class="feat-t">Automated Processing</div><div class="feat-d">Stored procedures for account opening, loan disbursement, and EMI tracking.</div></div>
+      <div class="feat glass"><span class="feat-ic">📋</span><div class="feat-t">Regulatory Compliance</div><div class="feat-d">KYC verification, PAN/Aadhar validation, and complete audit trail.</div></div>
+      <div class="feat glass"><span class="feat-ic">💳</span><div class="feat-t">Financial Products</div><div class="feat-d">Fixed deposits, recurring deposits, and credit card rewards management.</div></div>
     </div>
   </div>
 
   <!-- ══ 02 OBJECTIVE ══ -->
   <div class="sec" id="objective">
     <div class="sec-head">02 · Objective</div>
-    <div class="objective">
+    <div class="objective glass">
       Demonstrate enterprise-level T-SQL development — CTEs, window functions, stored procedures, triggers, and views — through a realistic banking scenario with real-world business rules, data validation, and automated processing pipelines. Covers complete banking operations from customer onboarding to loan lifecycle management, fraud detection, and regulatory compliance reporting.
     </div>
   </div>
@@ -557,11 +632,11 @@
     <div class="sec-head">03 · Dataset Description</div>
     <div class="table-wrap">
       <div class="t-head-row"><div>Table</div><div>Type</div><div>Description</div></div>
-      <div class="t-row"><div class="t-name">Customers</div><div><span class="t-tag b-blue">Master</span></div><div class="t-desc">Demographics, KYC, credit score, PAN, Aadhar. Status: Active / Dormant / Suspended / Closed.</div></div>
+      <div class="t-row"><div class="t-name">Customers</div><div><span class="t-tag b-gold">Master</span></div><div class="t-desc">Demographics, KYC, credit score, PAN, Aadhar. Status: Active / Dormant / Suspended / Closed.</div></div>
       <div class="t-row"><div class="t-name">Accounts</div><div><span class="t-tag b-teal">Core</span></div><div class="t-desc">Savings, Current, Salary, FD — balance tracking, accrued interest, joint-account support.</div></div>
       <div class="t-row"><div class="t-name">Transactions</div><div><span class="t-tag b-amber">High Vol</span></div><div class="t-desc">Deposit / Withdrawal / Transfer / Cheque across ATM, Online, Counter, Mobile channels with fraud flags.</div></div>
-      <div class="t-row"><div class="t-name">Loans</div><div><span class="t-tag b-purple">Finance</span></div><div class="t-desc">Personal, Home, Auto, Education — EMI calculation, CIBIL score, collateral details.</div></div>
-      <div class="t-row"><div class="t-name">LoanEMISchedule</div><div><span class="t-tag b-purple">Finance</span></div><div class="t-desc">Month-by-month EMI with Pending / Paid / Overdue / Partial status and penalty charges.</div></div>
+      <div class="t-row"><div class="t-name">Loans</div><div><span class="t-tag b-light">Finance</span></div><div class="t-desc">Personal, Home, Auto, Education — EMI calculation, CIBIL score, collateral details.</div></div>
+      <div class="t-row"><div class="t-name">LoanEMISchedule</div><div><span class="t-tag b-light">Finance</span></div><div class="t-desc">Month-by-month EMI with Pending / Paid / Overdue / Partial status and penalty charges.</div></div>
       <div class="t-row"><div class="t-name">CreditCards</div><div><span class="t-tag b-teal">Finance</span></div><div class="t-desc">Visa / Mastercard / Amex — Classic, Gold, Platinum variants with reward points and limits.</div></div>
       <div class="t-row"><div class="t-name">CreditCardTransactions</div><div><span class="t-tag b-teal">Finance</span></div><div class="t-desc">Category-tagged spending (Grocery, Fuel, Travel, Entertainment) with reward point accrual.</div></div>
       <div class="t-row"><div class="t-name">FixedDeposits</div><div><span class="t-tag b-green">Product</span></div><div class="t-desc">Fixed-term deposits with maturity tracking, auto-renewal, and compound interest accrual.</div></div>
@@ -577,14 +652,14 @@
   <div class="sec" id="tools">
     <div class="sec-head">04 · Tools &amp; Technologies</div>
     <div class="tools-grid">
-      <div class="tool"><div class="tdot" style="background:#378add"></div>SQL Server 2019+</div>
-      <div class="tool"><div class="tdot" style="background:#7f77dd"></div>T-SQL</div>
-      <div class="tool"><div class="tdot" style="background:#1d9e75"></div>SSMS</div>
-      <div class="tool"><div class="tdot" style="background:#639922"></div>Azure Data Studio</div>
-      <div class="tool"><div class="tdot" style="background:#ba7517"></div>Power BI</div>
-      <div class="tool"><div class="tdot" style="background:#d85a30"></div>Tableau</div>
-      <div class="tool"><div class="tdot" style="background:#888780"></div>Git / GitHub</div>
-      <div class="tool"><div class="tdot" style="background:#993556"></div>VS Code + SQL Ext</div>
+      <div class="tool glass"><div class="tdot" style="background:#ffcc44;color:#ffcc44"></div>SQL Server 2019+</div>
+      <div class="tool glass"><div class="tdot" style="background:#ffaa66;color:#ffaa66"></div>T-SQL</div>
+      <div class="tool glass"><div class="tdot" style="background:#62d6be;color:#62d6be"></div>SSMS</div>
+      <div class="tool glass"><div class="tdot" style="background:#7de89a;color:#7de89a"></div>Azure Data Studio</div>
+      <div class="tool glass"><div class="tdot" style="background:#ffb755;color:#ffb755"></div>Power BI</div>
+      <div class="tool glass"><div class="tdot" style="background:#ff8c55;color:#ff8c55"></div>Tableau</div>
+      <div class="tool glass"><div class="tdot" style="background:#c8a878;color:#c8a878"></div>Git / GitHub</div>
+      <div class="tool glass"><div class="tdot" style="background:#ff9988;color:#ff9988"></div>VS Code + SQL Ext</div>
     </div>
   </div>
 
@@ -609,10 +684,10 @@
 <span class="kw">GROUP BY</span> ReferenceNumber
 <span class="kw">HAVING COUNT</span>(*) &gt; <span class="num">1</span>;</div>
     <div class="rule-grid">
-      <div class="rule"><div class="rule-t">Customer rules</div><div class="rule-d">Age ≥ 18 · CreditScore 300–900 · Unique PAN &amp; Aadhar · Email format validation</div></div>
-      <div class="rule"><div class="rule-t">Account rules</div><div class="rule-d">Balance ≥ 0 · IFSC 11-char format · Status in allowed values</div></div>
-      <div class="rule"><div class="rule-t">Transaction rules</div><div class="rule-d">Amount > 0 · Balance reconciliation · Unique reference numbers</div></div>
-      <div class="rule"><div class="rule-t">Loan rules</div><div class="rule-d">Rate 3–25% · Tenure > 0 months · Collateral required for secured loans</div></div>
+      <div class="rule glass"><div class="rule-t">Customer rules</div><div class="rule-d">Age ≥ 18 · CreditScore 300–900 · Unique PAN &amp; Aadhar · Email format validation</div></div>
+      <div class="rule glass"><div class="rule-t">Account rules</div><div class="rule-d">Balance ≥ 0 · IFSC 11-char format · Status in allowed values</div></div>
+      <div class="rule glass"><div class="rule-t">Transaction rules</div><div class="rule-d">Amount > 0 · Balance reconciliation · Unique reference numbers</div></div>
+      <div class="rule glass"><div class="rule-t">Loan rules</div><div class="rule-d">Rate 3–25% · Tenure > 0 months · Collateral required for secured loans</div></div>
     </div>
   </div>
 
@@ -620,12 +695,12 @@
   <div class="sec" id="eda">
     <div class="sec-head">06 · Exploratory Data Analysis</div>
     <div class="eda-grid">
-      <div class="eda"><div class="eda-t">Customer Analytics</div><div class="eda-d">Active count · Segmentation distribution · KYC completion % · Geographic spread · Age distribution · Income brackets</div></div>
-      <div class="eda"><div class="eda-t">Account Analytics</div><div class="eda-d">Active accounts · Type distribution · Avg balance · Dormant % · Joint account % · Health score</div></div>
-      <div class="eda"><div class="eda-t">Transaction Analytics</div><div class="eda-d">Monthly volume · Avg amounts · Success rate · Peak hours · Mode distribution · Fraud detection rate</div></div>
-      <div class="eda"><div class="eda-t">Loan Analytics</div><div class="eda-d">Portfolio value · Type distribution · EMI on-time rate · Default rate · Avg EMI payment timing</div></div>
-      <div class="eda"><div class="eda-t">Credit Card Analytics</div><div class="eda-d">Active card count · Spending by category · Credit utilization ratio · Reward distribution · Delinquency rate</div></div>
-      <div class="eda"><div class="eda-t">Investment Analytics</div><div class="eda-d">FD maturity schedule · RD active count · Investment portfolio value · Interest income tracking</div></div>
+      <div class="eda glass"><div class="eda-t">Customer Analytics</div><div class="eda-d">Active count · Segmentation distribution · KYC completion % · Geographic spread · Age distribution · Income brackets</div></div>
+      <div class="eda glass"><div class="eda-t">Account Analytics</div><div class="eda-d">Active accounts · Type distribution · Avg balance · Dormant % · Joint account % · Health score</div></div>
+      <div class="eda glass"><div class="eda-t">Transaction Analytics</div><div class="eda-d">Monthly volume · Avg amounts · Success rate · Peak hours · Mode distribution · Fraud detection rate</div></div>
+      <div class="eda glass"><div class="eda-t">Loan Analytics</div><div class="eda-d">Portfolio value · Type distribution · EMI on-time rate · Default rate · Avg EMI payment timing</div></div>
+      <div class="eda glass"><div class="eda-t">Credit Card Analytics</div><div class="eda-d">Active card count · Spending by category · Credit utilization ratio · Reward distribution · Delinquency rate</div></div>
+      <div class="eda glass"><div class="eda-t">Investment Analytics</div><div class="eda-d">FD maturity schedule · RD active count · Investment portfolio value · Interest income tracking</div></div>
     </div>
   </div>
 
@@ -633,18 +708,18 @@
   <div class="sec" id="questions">
     <div class="sec-head">07 · Business Questions</div>
     <div class="q-grid">
-      <div class="q-item"><span class="q-n">Q01</span>Who are our VIP customers and what defines them?</div>
-      <div class="q-item"><span class="q-n">Q02</span>Which customer segments generate the most profit?</div>
-      <div class="q-item"><span class="q-n">Q03</span>What is the account balance distribution across types?</div>
-      <div class="q-item"><span class="q-n">Q04</span>How many accounts are dormant (no activity &gt; 6 months)?</div>
-      <div class="q-item"><span class="q-n">Q05</span>Which transactions are flagged fraudulent and why?</div>
-      <div class="q-item"><span class="q-n">Q06</span>What patterns indicate the highest fraud risk scores?</div>
-      <div class="q-item"><span class="q-n">Q07</span>Which loans are at risk of default by EMI overdue days?</div>
-      <div class="q-item"><span class="q-n">Q08</span>What is the EMI collection rate broken down per loan type?</div>
-      <div class="q-item"><span class="q-n">Q09</span>What is the top credit card spend category by card variant?</div>
-      <div class="q-item"><span class="q-n">Q10</span>Which fixed deposits mature in the next 30 days?</div>
-      <div class="q-item"><span class="q-n">Q11</span>What percentage of customers have completed KYC?</div>
-      <div class="q-item"><span class="q-n">Q12</span>What is the total interest income per customer for tax filing?</div>
+      <div class="q-item glass"><span class="q-n">Q01</span>Who are our VIP customers and what defines them?</div>
+      <div class="q-item glass"><span class="q-n">Q02</span>Which customer segments generate the most profit?</div>
+      <div class="q-item glass"><span class="q-n">Q03</span>What is the account balance distribution across types?</div>
+      <div class="q-item glass"><span class="q-n">Q04</span>How many accounts are dormant (no activity &gt; 6 months)?</div>
+      <div class="q-item glass"><span class="q-n">Q05</span>Which transactions are flagged fraudulent and why?</div>
+      <div class="q-item glass"><span class="q-n">Q06</span>What patterns indicate the highest fraud risk scores?</div>
+      <div class="q-item glass"><span class="q-n">Q07</span>Which loans are at risk of default by EMI overdue days?</div>
+      <div class="q-item glass"><span class="q-n">Q08</span>What is the EMI collection rate broken down per loan type?</div>
+      <div class="q-item glass"><span class="q-n">Q09</span>What is the top credit card spend category by card variant?</div>
+      <div class="q-item glass"><span class="q-n">Q10</span>Which fixed deposits mature in the next 30 days?</div>
+      <div class="q-item glass"><span class="q-n">Q11</span>What percentage of customers have completed KYC?</div>
+      <div class="q-item glass"><span class="q-n">Q12</span>What is the total interest income per customer for tax filing?</div>
     </div>
   </div>
 
@@ -694,14 +769,14 @@
   <div class="sec" id="insights">
     <div class="sec-head">09 · Key Insights</div>
     <div class="ins-list">
-      <div class="ins"><div class="ins-dot" style="background:#378add"></div><div><strong>VIP customers</strong> make up just 15% of the base but contribute <strong>65%</strong> of total account balances — high-value targeting is critical.</div></div>
-      <div class="ins"><div class="ins-dot" style="background:#378add"></div><div>Peak transaction hours are <strong>10 AM–2 PM and 6 PM–8 PM</strong>, accounting for 70% of all daily transaction volume.</div></div>
-      <div class="ins"><div class="ins-dot" style="background:#e24b4a"></div><div><strong>22% of all accounts are dormant</strong> — no activity in 6+ months — representing a significant reactivation opportunity.</div></div>
-      <div class="ins"><div class="ins-dot" style="background:#e24b4a"></div><div>Fraud detection accuracy stands at <strong>92%</strong>. Critical risk clusters around midnight transactions and high-value online transfers.</div></div>
-      <div class="ins"><div class="ins-dot" style="background:#1d9e75"></div><div><strong>Home Loans show the best EMI performance</strong> at 93% on-time, while Education Loans lag at 81% — risk-based pricing opportunity.</div></div>
-      <div class="ins"><div class="ins-dot" style="background:#1d9e75"></div><div>Top credit card spend category is <strong>Fuel (28%)</strong>, followed by Grocery (22%) and Travel (18%) — reward strategy should prioritize these.</div></div>
-      <div class="ins"><div class="ins-dot" style="background:#ba7517"></div><div>Only <strong>35% of customers actively redeem reward points</strong> — a significant untapped engagement lever with low acquisition cost.</div></div>
-      <div class="ins"><div class="ins-dot" style="background:#ba7517"></div><div>Average credit utilization is <strong>45%</strong> — healthy overall, but Gold card holders show consistently higher utilization than Platinum.</div></div>
+      <div class="ins glass"><div class="ins-dot" style="background:#ffcc44;color:#ffcc44"></div><div><strong>VIP customers</strong> make up just 15% of the base but contribute <strong>65%</strong> of total account balances — high-value targeting is critical.</div></div>
+      <div class="ins glass"><div class="ins-dot" style="background:#ffcc44;color:#ffcc44"></div><div>Peak transaction hours are <strong>10 AM–2 PM and 6 PM–8 PM</strong>, accounting for 70% of all daily transaction volume.</div></div>
+      <div class="ins glass"><div class="ins-dot" style="background:#ff7055;color:#ff7055"></div><div><strong>22% of all accounts are dormant</strong> — no activity in 6+ months — representing a significant reactivation opportunity.</div></div>
+      <div class="ins glass"><div class="ins-dot" style="background:#ff7055;color:#ff7055"></div><div>Fraud detection accuracy stands at <strong>92%</strong>. Critical risk clusters around midnight transactions and high-value online transfers.</div></div>
+      <div class="ins glass"><div class="ins-dot" style="background:#7de89a;color:#7de89a"></div><div><strong>Home Loans show the best EMI performance</strong> at 93% on-time, while Education Loans lag at 81% — risk-based pricing opportunity.</div></div>
+      <div class="ins glass"><div class="ins-dot" style="background:#7de89a;color:#7de89a"></div><div>Top credit card spend category is <strong>Fuel (28%)</strong>, followed by Grocery (22%) and Travel (18%) — reward strategy should prioritize these.</div></div>
+      <div class="ins glass"><div class="ins-dot" style="background:#ffb755;color:#ffb755"></div><div>Only <strong>35% of customers actively redeem reward points</strong> — a significant untapped engagement lever with low acquisition cost.</div></div>
+      <div class="ins glass"><div class="ins-dot" style="background:#ffb755;color:#ffb755"></div><div>Average credit utilization is <strong>45%</strong> — healthy overall, but Gold card holders show consistently higher utilization than Platinum.</div></div>
     </div>
   </div>
 
@@ -709,32 +784,32 @@
   <div class="sec" id="reco">
     <div class="sec-head">10 · Recommendations</div>
     <div class="reco-grid">
-      <div class="reco">
+      <div class="reco glass">
         <span class="reco-tag b-amber">Immediate</span>
         <div class="reco-t">Dormant Account Reactivation</div>
         <div class="reco-d">Contact the 22% dormant customers with personalized offers and set up auto-dormancy status updates via triggers.</div>
       </div>
-      <div class="reco">
-        <span class="reco-tag b-blue">Immediate</span>
+      <div class="reco glass">
+        <span class="reco-tag b-gold">Immediate</span>
         <div class="reco-t">Fraud Real-time Alerts</div>
         <div class="reco-d">Implement SMS/email alerts for Critical-risk transactions and mandatory OTP for online transfers &gt; ₹2,00,000.</div>
       </div>
-      <div class="reco">
-        <span class="reco-tag b-purple">Medium-term</span>
+      <div class="reco glass">
+        <span class="reco-tag b-light">Medium-term</span>
         <div class="reco-t">Proactive EMI Management</div>
         <div class="reco-d">Contact customers 5 days before EMI due date and offer 0.5% rate reduction for consistent on-time payments.</div>
       </div>
-      <div class="reco">
-        <span class="reco-tag b-purple">Medium-term</span>
+      <div class="reco glass">
+        <span class="reco-tag b-light">Medium-term</span>
         <div class="reco-t">Reward Redemption Campaign</div>
         <div class="reco-d">65% of customers have unused points — targeted email campaigns with enhanced reward rates for top spend categories.</div>
       </div>
-      <div class="reco">
+      <div class="reco glass">
         <span class="reco-tag b-teal">Long-term</span>
         <div class="reco-t">Power BI Dashboard</div>
         <div class="reco-d">Wire the 5 analytical views into real-time BI dashboards for fraud monitoring, loan portfolio, and customer segmentation.</div>
       </div>
-      <div class="reco">
+      <div class="reco glass">
         <span class="reco-tag b-teal">Long-term</span>
         <div class="reco-t">ML Churn Prediction</div>
         <div class="reco-d">Export segmentation data as an ML training set — DaysSinceLastTransaction and balance drop are the strongest churn signals.</div>
@@ -822,16 +897,16 @@
   <div class="sec">
     <div class="sec-head">Learning Outcomes</div>
     <div class="out-grid">
-      <div class="out"><span class="out-ck">✓</span>Advanced CTEs &amp; window functions</div>
-      <div class="out"><span class="out-ck">✓</span>Stored procedures with error handling</div>
-      <div class="out"><span class="out-ck">✓</span>Trigger-driven automation</div>
-      <div class="out"><span class="out-ck">✓</span>Business intelligence views</div>
-      <div class="out"><span class="out-ck">✓</span>Real-world banking business logic</div>
-      <div class="out"><span class="out-ck">✓</span>Data validation &amp; constraints</div>
-      <div class="out"><span class="out-ck">✓</span>Performance optimization techniques</div>
-      <div class="out"><span class="out-ck">✓</span>Audit trail &amp; compliance design</div>
-      <div class="out"><span class="out-ck">✓</span>Enterprise schema patterns</div>
-      <div class="out"><span class="out-ck">✓</span>Tax &amp; KYC regulatory tracking</div>
+      <div class="out glass"><span class="out-ck">✓</span>Advanced CTEs &amp; window functions</div>
+      <div class="out glass"><span class="out-ck">✓</span>Stored procedures with error handling</div>
+      <div class="out glass"><span class="out-ck">✓</span>Trigger-driven automation</div>
+      <div class="out glass"><span class="out-ck">✓</span>Business intelligence views</div>
+      <div class="out glass"><span class="out-ck">✓</span>Real-world banking business logic</div>
+      <div class="out glass"><span class="out-ck">✓</span>Data validation &amp; constraints</div>
+      <div class="out glass"><span class="out-ck">✓</span>Performance optimization techniques</div>
+      <div class="out glass"><span class="out-ck">✓</span>Audit trail &amp; compliance design</div>
+      <div class="out glass"><span class="out-ck">✓</span>Enterprise schema patterns</div>
+      <div class="out glass"><span class="out-ck">✓</span>Tax &amp; KYC regulatory tracking</div>
     </div>
   </div>
 
@@ -848,5 +923,205 @@
   </div>
 
 </div>
+
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Gold light line — S-curve path with animated particle
+class GoldLine {
+  constructor() {
+    this.t = 0;
+    this.speed = 0.004;
+    this.trail = [];
+    this.maxTrail = 180;
+  }
+
+  // Bezier S-curve parametric
+  point(t) {
+    const w = canvas.width, h = canvas.height;
+    // Control points for the S-shape from image
+    const p0 = { x: w * 0.62, y: h * -0.05 };
+    const p1 = { x: w * 0.78, y: h * 0.25 };
+    const p2 = { x: w * 0.30, y: h * 0.45 };
+    const p3 = { x: w * 0.55, y: h * 0.72 };
+    const p4 = { x: w * 0.80, y: h * 0.95 };
+    const p5 = { x: w * 0.70, y: h * 1.08 };
+
+    // Piecewise cubic: two segments
+    if (t < 0.5) {
+      const s = t / 0.5;
+      return cubicBezier(p0, p1, p2, p3, s);
+    } else {
+      const s = (t - 0.5) / 0.5;
+      return cubicBezier(p3, p4, p5, { x: p5.x, y: p5.y + 60 }, s);
+    }
+  }
+
+  update() {
+    this.t += this.speed;
+    if (this.t > 1) this.t = 0;
+    const pt = this.point(this.t);
+    this.trail.unshift(pt);
+    if (this.trail.length > this.maxTrail) this.trail.pop();
+  }
+
+  draw() {
+    if (this.trail.length < 2) return;
+
+    // Draw static faint full path
+    ctx.save();
+    ctx.beginPath();
+    const allPts = [];
+    for (let i = 0; i <= 120; i++) {
+      allPts.push(this.point(i / 120));
+    }
+    ctx.moveTo(allPts[0].x, allPts[0].y);
+    for (let i = 1; i < allPts.length; i++) {
+      ctx.lineTo(allPts[i].x, allPts[i].y);
+    }
+    ctx.strokeStyle = 'rgba(255,170,30,0.12)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.restore();
+
+    // Draw glowing trail
+    for (let i = 0; i < this.trail.length - 1; i++) {
+      const alpha = (1 - i / this.trail.length);
+      const width = (1 - i / this.trail.length) * 5 + 0.5;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(this.trail[i].x, this.trail[i].y);
+      ctx.lineTo(this.trail[i + 1].x, this.trail[i + 1].y);
+
+      // Outer glow
+      ctx.strokeStyle = `rgba(255,180,30,${alpha * 0.15})`;
+      ctx.lineWidth = width * 3;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // Core bright line
+      ctx.strokeStyle = `rgba(255,230,120,${alpha * 0.9})`;
+      ctx.lineWidth = width * 0.8;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    // Bright head particle
+    if (this.trail.length > 0) {
+      const head = this.trail[0];
+      const grad = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 18);
+      grad.addColorStop(0, 'rgba(255,255,200,0.95)');
+      grad.addColorStop(0.3, 'rgba(255,200,60,0.7)');
+      grad.addColorStop(0.7, 'rgba(255,140,20,0.3)');
+      grad.addColorStop(1, 'rgba(255,100,0,0)');
+      ctx.beginPath();
+      ctx.arc(head.x, head.y, 18, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+  }
+}
+
+function cubicBezier(p0, p1, p2, p3, t) {
+  const mt = 1 - t;
+  return {
+    x: mt*mt*mt*p0.x + 3*mt*mt*t*p1.x + 3*mt*t*t*p2.x + t*t*t*p3.x,
+    y: mt*mt*mt*p0.y + 3*mt*mt*t*p1.y + 3*mt*t*t*p2.y + t*t*t*p3.y
+  };
+}
+
+// Second line (mirrored / offset)
+class GoldLine2 {
+  constructor() {
+    this.t = 0.4;
+    this.speed = 0.003;
+    this.trail = [];
+    this.maxTrail = 120;
+  }
+  point(t) {
+    const w = canvas.width, h = canvas.height;
+    const p0 = { x: w * 0.15, y: h * 0.05 };
+    const p1 = { x: w * 0.40, y: h * 0.30 };
+    const p2 = { x: w * 0.10, y: h * 0.55 };
+    const p3 = { x: w * 0.35, y: h * 0.80 };
+    const p4 = { x: w * 0.55, y: h * 1.0 };
+    if (t < 0.5) {
+      const s = t / 0.5;
+      return cubicBezier(p0, p1, p2, p3, s);
+    } else {
+      const s = (t - 0.5) / 0.5;
+      return cubicBezier(p3, p4, { x: p4.x + 30, y: p4.y + 40 }, { x: p4.x + 50, y: p4.y + 80 }, s);
+    }
+  }
+  update() {
+    this.t += this.speed;
+    if (this.t > 1) this.t = 0;
+    const pt = this.point(this.t);
+    this.trail.unshift(pt);
+    if (this.trail.length > this.maxTrail) this.trail.pop();
+  }
+  draw() {
+    if (this.trail.length < 2) return;
+    for (let i = 0; i < this.trail.length - 1; i++) {
+      const alpha = (1 - i / this.trail.length) * 0.6;
+      const width = (1 - i / this.trail.length) * 3 + 0.3;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(this.trail[i].x, this.trail[i].y);
+      ctx.lineTo(this.trail[i + 1].x, this.trail[i + 1].y);
+      ctx.strokeStyle = `rgba(255,200,80,${alpha * 0.12})`;
+      ctx.lineWidth = width * 2.5;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      ctx.strokeStyle = `rgba(255,220,100,${alpha * 0.75})`;
+      ctx.lineWidth = width * 0.6;
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+}
+
+const line1 = new GoldLine();
+const line2 = new GoldLine2();
+
+function drawBg() {
+  const w = canvas.width, h = canvas.height;
+  // Rich orange gradient background
+  const bg = ctx.createRadialGradient(w * 0.5, h * 0.35, 0, w * 0.5, h * 0.5, Math.max(w, h) * 0.85);
+  bg.addColorStop(0, '#d46000');
+  bg.addColorStop(0.35, '#b84a00');
+  bg.addColorStop(0.65, '#8a3200');
+  bg.addColorStop(1, '#3d1500');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
+  // Subtle warm center glow
+  const glow = ctx.createRadialGradient(w * 0.55, h * 0.3, 0, w * 0.55, h * 0.3, w * 0.5);
+  glow.addColorStop(0, 'rgba(255,140,30,0.22)');
+  glow.addColorStop(0.5, 'rgba(220,80,0,0.08)');
+  glow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, w, h);
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBg();
+  line2.update(); line2.draw();
+  line1.update(); line1.draw();
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
 </body>
 </html>

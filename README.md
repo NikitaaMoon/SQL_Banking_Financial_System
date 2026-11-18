@@ -744,13 +744,7 @@ After studying this project, you will understand:
 
 ---
 
-## 📞 Contact & Feedback
 
-Have questions or suggestions? Feel free to reach out:
-
-**Email:** [Nikita Moon](EMAIL_ID)  
-**GitHub:** [NikitaaMoon](Github)  
-**LinkedIn:** [Nikita Moon](Linkedin)
 
 ---
 
